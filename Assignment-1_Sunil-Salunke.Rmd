@@ -1,0 +1,76 @@
+---
+title: "ANA 515 Assignment 1"
+author: "sunil salunke"
+date: "6/5/2022"
+output:
+  html_document:
+    theme:
+      bootswatch: flatly
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, echo=FALSE}
+#Install necessary packages for analysis
+#install.packages("tidyverse")
+#install.packages("knitr")
+#install.packages("bslib")
+```
+
+
+```{r echo=FALSE, message=FALSE}
+#Import libraries needed for analysis
+library(tidyverse)
+library(knitr)
+```
+
+#Gun deaths data
+
+```{r echo=FALSE}
+#Import gun deaths data
+url <- "https://raw.githubusercontent.com/fivethirtyeight/guns-data/master/full_data.csv"
+gun_deaths <- read_csv(url)
+```
+
+
+```{r echo=FALSE}
+#Data Exploration for gun deaths data to understand data better
+str(gun_deaths)
+```
+
+
+```{r, echo=FALSE}
+#Filter gun deaths data for for age less than or equal to 65
+youth <- gun_deaths %>% filter(age <=65)
+```
+
+
+```{r echo=FALSE}
+#Summay of youth dataframe to understand data better
+summary(youth)
+```
+
+We have data about `r nrow(gun_deaths)` individuals killed by guns. Only `r nrow(gun_deaths) - nrow(youth)` are older than 65. The distribution of the remainder is shown below: 
+
+
+```{r youth-dist, echo=FALSE}
+#Gun deaths by age for age less than or equal to 65
+youth %>% 
+  ggplot(aes(age)) +
+  geom_freqpoly(binwidth = 1)
+```
+
+
+```{r race-dist, echo=FALSE}
+#Gun deaths by race for age less than or equal to 65
+youth %>% 
+  ggplot(aes(fct_infreq(race) %>% fct_rev())) +
+  geom_bar() + coord_flip() +
+  labs(x = "Victim race")
+```
+
